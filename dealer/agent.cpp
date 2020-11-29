@@ -1,36 +1,44 @@
 /**
  * Agent implementation.
  *
- * Copyright (c) 2019, Sekhar Ravinutala.
+ * Copyright (c) 2020, Sekhar Ravinutala, Jiayue Sun.
  */
 
-#include <algorithm>
 #include "dealer/agent.h"
 
-Agent::Agent(const AgentInfo &aInfo) : info(aInfo) {
-}
+#include <algorithm>
 
-uint32_t Agent::closes() {
-  return _closes;
-}
+const uint32_t DEALS_FOR_BONUS = 10;  // deals required for bonus
 
-double Agent::revenue() {
-  return _revenue;
-}
+Agent::Agent(const AgentInfo &aInfo) : info(aInfo) {}
 
-uint16_t Agent::bonuses() {
-  return _bonuses;
-}
+uint32_t Agent::closes() { return _closes; }
 
-std::time_t Agent::when() {
-    return _when;
-}
+double Agent::revenue() { return _revenue; }
+
+uint16_t Agent::bonuses() { return _bonuses; }
+
+std::time_t Agent::when() { return _when; }
 
 uint32_t Agent::assign(const CustomerInfo &cInfo) {
   time_t begin = std::max(_when, cInfo.arrivalTime);
   _when = update(begin, info.serviceTime * 3600);
 
-  // Add your code here.
+  if (_sunday == 0) {
+    _sunday = update(begin, 0, true);
+  }
+  if (cInfo.saleClosed) {
+    _closes += 1;
+    _revenue += PRICES[cInfo.interest];
+    _weekCloses += 1;
+    if (_weekCloses == DEALS_FOR_BONUS) {
+      _bonuses += 1;
+    }
+  }
+  if (_when == _sunday) {
+    _weekCloses = 0;
+    _sunday = update(_sunday, 0, true);
+  }
 
   return (begin - cInfo.arrivalTime) / 60;
 }
