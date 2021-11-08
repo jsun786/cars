@@ -1,5 +1,7 @@
 # Cars
 
+**Note that this extra credit assignment did not receive a perfect score.**
+
 The leading high-end sports car dealer in Beverly Hills is looking to improve customer satisfaction. To that end, they asked you to write software to track their sales metrics, which include wait times and agent performance, so they can decide on the agent mix. Here are their requirements.
 
 When a customer arrives, she is assigned an agent with the highest expertise for the car she is planning to buy. If multiple agents match and are available, the one with the highest rating must be picked. And if no agent is available, the customer will wait and gets assigned to the next agent that becomes available.
